@@ -20,17 +20,20 @@ function App() {
 
   // # 아래의 변수는 es6의 destructuring 문법 활용한 것
   let [title, func] = useState(['송리단길 맛집', '이태원 맛집', '연남동 맛집']);
-  let [num, addNum] = useState(0);
   let [modal, changeModal] = useState(false);
-  let [index, getIndex ]= useState(0);
+  let [index, getIndex] = useState(0);
+  let [input, getInput] = useState('');
 
-  function changeTitle() {
+
+  // 글 발행 기능
+  function addTitle(input) {
     // title[0] = '변경할 값' <- 이런 형태의 데이터 변경은 권장하지 않음(state를 직접 건드는 것이라서!)
     // 해결책 => deep copy : 값공유 X, 서로 독립적인 값을 가지는 복사
     // reference data type 검색해 보기
     var newArray = [...title];
-    newArray[0] = '경리단길 맛집';
+    newArray.unshift(input);
     func(newArray);
+    
   }
 
   //*return 안에는 최상위 div 한개만 가능
@@ -38,14 +41,9 @@ function App() {
     <div className="App">
       <div className="black-nav" style={{fontSize:'30px'}}>개발 Blog</div>
       <ul className="list">
-             <li>
-                <h3>{title[0]} <span onClick={()=>{addNum(num+1)}}>👍</span>{ num }</h3>
-                <button onClick={changeTitle}>눌러</button>
-                <p>12월 6일발행</p>
-              </li>
            {
             title.map((value, index) => {
-              return( <li>
+              return( <li key={index}>
                 <h3 onClick={() => { getIndex(index); changeModal(true)}}>{value}, {index}</h3>
                 <p>12월 6일발행</p>
               </li>)
@@ -53,7 +51,11 @@ function App() {
           }
 
       </ul>
-
+      <div className="publish">
+         <input onChange={(e) => { getInput(e.target.value);}} />
+        <button onClick={()=>{addTitle(input)}}>저장</button>
+      </div>
+     
       {
         modal === true
           ? <Modal getTitle={ title } fetchIndex={ index }></Modal>
@@ -72,6 +74,8 @@ function App() {
 // # props로 자식에게 state 전해주는 법
 // 1. <자식 컴포넌트 작명={state명}>
 // 2. 자식 컴포넌트에서 props 파라미터 입력 후 사용
+
+
 function Modal(props) {
   // return() 내부를 묶을 때, 의미없는 <div> 쓰기 싫으면
   // <></> <- fragments 문법
@@ -87,7 +91,7 @@ function Modal(props) {
 }
 
 // react의 if문은 삼항연산자로
-// 반복문은 map 함수로.
+// 반복문은 map 함수로. btw, map반복문으로 돌린 HTML에는 key={} 가 필요
 // 그래도 for 반복문을 쓰고 싶다면 일반 함수 안에서 사용한다
 
 

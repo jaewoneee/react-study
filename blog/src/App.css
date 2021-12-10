@@ -32,6 +32,24 @@ ul, li{
   margin-top: 20px;
   background: #eee;
 }
+
+.publish{
+  margin:30px 0;
+}
+.publish input{
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  width: 80%;
+  border: 1px solid grey;
+}
+.publish button{
+  display: block;
+  margin:auto;
+  margin-top: 10px;
+}
+
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
