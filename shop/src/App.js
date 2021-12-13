@@ -18,8 +18,8 @@ function App() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link><Link to="/">Home</Link></Nav.Link>
-              <Nav.Link><Link to="/detail/1">Detail</Link></Nav.Link>
+              <Nav.Link as={ Link } to="/">Home</Nav.Link>
+              <Nav.Link as={ Link } to="/detail/1">Detail</Nav.Link>
               <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
@@ -78,10 +78,10 @@ function Card(props) {
   )
 }
 
-// Route
+// # Route
 // 더 정확한 라우트 분리를 위해선 exact 속성을 넣어줘야 한다.
 
-// Switch
-// path가 중복 매칭되는 경우, 상위에 정의된 path의 내용 하나만 보여 준다
+// # Switch
+// path가 중복 매칭되는 경우, 먼저 정의된 path의 내용 하나만 보여 준다
 
 export default App;
