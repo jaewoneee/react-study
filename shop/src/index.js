@@ -10,11 +10,21 @@ import { BrowserRouter } from 'react-router-dom';
 //  # HashRouter : url에 #이 생성 & 더 안전한 라우팅이 가능
 // ※ url의 # 기호는 서버로 넘어가지 않음
 
+//  # redux 설정
+import { Provider } from 'react-redux'; // 1. import 시키고
+import { createStore } from 'redux';
 
+let store = createStore(() => {
+  return [{ id: 0, name: 'jacket', quan: 2 }]
+});
+// 2. Provider 태그로 App 감싸고
+// 3. createStore() 안에 state 저장
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-    <App />
+      <Provider store={store}> 
+        <App />
+        </Provider>
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')

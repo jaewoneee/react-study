@@ -1,7 +1,9 @@
 // react 컴포넌트 만들때는 꼭 import React 해야함!
 import React, { useEffect, useState, useContext } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import {stockContext} from './App.js';
+import { Nav } from 'react-bootstrap'
+import { CSSTransition } from 'react-transition-group'
+import { stockContext } from './App.js';
 import './Detail.scss';
 
 // # Lifecycle Hook
@@ -21,35 +23,35 @@ function Detail(props) {
     let product = props.shoes.find((info) => {
         return info.id == id;
     })
+    let [tab, changeTab] = useState(0);
+    let [transition, changeTransition] = useState(false);
     let [modal, changeModal] = useState(true);
     let [value, changeValue] = useState('');
+    let productStock = useContext(stockContext);
     //  2. 요즘 버전 : useEffect
     //  1)컴포넌트가 mount 되었을때 / 2)컴포넌트가 update(재렌더링) 되었을 때 / 3)컴포넌트가 사라질 때(=unmount) 실행 시킬 수 있다
     // useEffect는 여러 번 쓸 수 있다! 근데, 작성한 순서대로 실행된다.
-
-    let productStock = useContext(stockContext);
-
     useEffect(() => {
 
         // ※setTimeout 기능은 변수에 넣어 사용하는 케이스가 많다. 어떤 곳에서는 이 기능을 쓰고 싶지 않을 수도 있으니깐~
-        let timer = setTimeout(() => { 
+        let timer = setTimeout(() => {
             changeModal(false);
         }, 3000);
 
         // 3)의 경우, 실행할 코드 앞에 return 을 써줘야 함
-         return () => {
+        return () => {
             clearTimeout(timer);
         }
-    // useEffect는 [조건]을 넣을 수 있다. => [modal] state 가 변경이 될 때만 setTimeout 실행하라는 뜻임.
-    // [] 이 안에 조건은 여러개 들어갈 수 있다.
-    // [] <- 공란이라면? 컴포넌트 마운트 됐을 때 한번 실행하고 그 이후는 실행이 안됨.
+        // useEffect는 [조건]을 넣을 수 있다. => [modal] state 가 변경이 될 때만 setTimeout 실행하라는 뜻임.
+        // [] 이 안에 조건은 여러개 들어갈 수 있다.
+        // [] <- 공란이라면? 컴포넌트 마운트 됐을 때 한번 실행하고 그 이후는 실행이 안됨.
     }, [modal]);
 
 
     return (
         <div className="container">
             <input placeholder='what' onChange={(e) => { changeValue(e.target.value) }}></input>
-            <p>{ value }</p>
+            <p>{value}</p>
             {
                 modal === true
                     ? (<div className="alert-box">
@@ -74,7 +76,7 @@ function Detail(props) {
                     <h4 className="pt-5">{product.title}</h4>
                     <p>{product.content}</p>
                     <p>{product.price}</p>
-                    <p>재고 : { productStock[product.id - 1] }</p>
+                    <p>재고 : {productStock[product.id - 1]}</p>
                     {/* <Info getStock={ props.stock }></Info> */}
                     <button className="btn btn-danger" onClick={() => {
                         props.changeStock([9, 10, 11]);
@@ -86,10 +88,36 @@ function Detail(props) {
                     }}>뒤로가기</button>
                 </div>
             </div>
+
+            <Nav className="mt-5" variant="tabs" defaultActiveKey="link-0">
+                <Nav.Item>
+                    <Nav.Link eventKey="link-0" onClick={() => { changeTab(0); changeTransition(false); }}>1</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link eventKey="link-1" onClick={() => { changeTab(1); changeTransition(false); }}>2</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link eventKey="link-2" onClick={() => { changeTab(2); changeTransition(false); }}>3</Nav.Link>
+                </Nav.Item>
+            </Nav>
+            <CSSTransition in={ transition } classNames="wow" timeout={500}>
+                <TabContent currentTab={ tab } tabAni={changeTransition}></TabContent>
+            </CSSTransition>
         </div>
     )
 }
-
+function TabContent(props) {
+    useEffect(() => {
+        props.tabAni(true);
+    })
+    if (props.currentTab === 0) {
+        return <div>0번째</div>
+    } else if (props.currentTab === 1) {
+        return <div>1번째</div>
+    } else {
+        return <div>2번째</div>
+    }
+}
 // function Info() {
 //     return (
 //         <p>재고 : { productStock }</p>

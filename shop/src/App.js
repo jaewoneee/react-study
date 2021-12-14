@@ -1,12 +1,12 @@
 /* eslint-disable */
 import React, { useState, useContext} from 'react';
 import { Container, Nav, NavDropdown, Navbar } from 'react-bootstrap'
+import { Link, Route, Switch } from 'react-router-dom';
 import axios from 'axios';
 import './App.css';
 import shoesData from './data';
 import Detail from './detail'
-import { Link, Route, Switch } from 'react-router-dom';
-
+import Cart from './cart'
 // # context
 // 1. React.createContext로 범위 생성 => 변수에 담음!
 // 2. 같은 값을 공유할 HTML을 변수명의 태그로 감싼다. ex) <stockContext.Provider>
@@ -89,10 +89,14 @@ function App() {
             <Detail shoes={shoes} changeStock={changeStock}></Detail>
           </stockContext.Provider>
       </Route>
-      {/* <Route path="" component={ aaa }></Route> */}
+        {/* <Route path="" component={ aaa }></Route> */}
+       <Route path="/cart">
+            <Cart></Cart>
+        </Route>  
       <Route path="/:id">
             <div>whatever</div>
-      </Route>       
+        </Route>   
+      
     </Switch>
     </div>
   );

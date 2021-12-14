@@ -40,3 +40,14 @@ $main : #ff0000;
 .my-alert3{
     @include commonFont(bold); // font-weight:bold;
 }
+
+// CSS Transition
+// 에니메이션 시작할 때 적용할 css
+.wow-enter{
+    opacity: 0;
+}
+// 에니메이션 동작할 때 적용할 css
+.wow-enter-active{
+    opacity: 1;
+    transition: all 5000ms;
+}
