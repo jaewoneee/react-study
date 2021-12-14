@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { useState } from 'react';
+import React, { useState, useContext} from 'react';
 import { Container, Nav, NavDropdown, Navbar } from 'react-bootstrap'
 import axios from 'axios';
 import './App.css';
@@ -7,18 +7,17 @@ import shoesData from './data';
 import Detail from './detail'
 import { Link, Route, Switch } from 'react-router-dom';
 
+// # context
+// 1. React.createContext로 범위 생성 => 변수에 담음!
+// 2. 같은 값을 공유할 HTML을 변수명의 태그로 감싼다. ex) <stockContext.Provider>
+// 3. 태그 안의 value 속성에 공유하고 싶은 데이터를 지정한다 ex) value={stock}
+export let stockContext = React.createContext();
+
 function App() {
   let [shoes, changeShoes] = useState(shoesData);
+  let [stock, changeStock] = useState([1,2,3])
   let [status, changeStatus] = useState(false);
   let [idx, changeIdx] = useState(2);
-  // function fetchData(data) {
-  //   let newArray = [...shoes];
-  //   for (let i = 0; i < data.length; i++){
-  //     newArray.push(data[i]);
-  //   }
-  //   changeShoes(newArray);
-  // }
-
 
   return (
     <div className="App">
@@ -53,6 +52,7 @@ function App() {
       <Route exact path="/">
         <div>메인</div>
           <div className="container">
+          <stockContext.Provider value={stock}>
           <div className="row">
             {
               shoes.map((shoe, index) => {
@@ -61,13 +61,14 @@ function App() {
                 )
               })
             }
-            </div>
+              </div>
+           </stockContext.Provider>
             {
               status == true
                 ? <Load></Load>
                 : null
             }
-           
+
             <button className='btn btn-primary' onClick={() => {
               changeStatus(true);
               axios.get(`https://codingapple1.github.io/shop/data${idx}.json`)
@@ -83,8 +84,10 @@ function App() {
       
         </div> 
       </Route>
-      <Route path="/detail/:id">
-          <Detail shoes={ shoes }></Detail>
+        <Route path="/detail/:id">
+           <stockContext.Provider value={stock}>
+            <Detail shoes={shoes} changeStock={changeStock}></Detail>
+          </stockContext.Provider>
       </Route>
       {/* <Route path="" component={ aaa }></Route> */}
       <Route path="/:id">
@@ -103,6 +106,7 @@ function Card(props) {
       <h4>{props.getShoes.title}</h4>
       <small>{props.getShoes.content}</small>
       <p>{props.getShoes.price} won</p>
+      <Test></Test>
     </div>
   )
 }
@@ -111,6 +115,15 @@ function Load() {
     <p>loading...</p>
   )      
 }
+
+function Test() {
+  // 4. context 로 생성된 데이터 갖다 쓰기 =>  useContext(범위명)
+  let stocks = useContext(stockContext);
+  return (
+    <p>재고: { stocks[0] }</p>
+  )  
+}
+
 // # Route
 // 더 정확한 라우트 분리를 위해선 exact 속성을 넣어줘야 한다.
 

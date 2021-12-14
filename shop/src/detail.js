@@ -1,6 +1,7 @@
 // react 컴포넌트 만들때는 꼭 import React 해야함!
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import {stockContext} from './App.js';
 import './Detail.scss';
 
 // # Lifecycle Hook
@@ -25,6 +26,9 @@ function Detail(props) {
     //  2. 요즘 버전 : useEffect
     //  1)컴포넌트가 mount 되었을때 / 2)컴포넌트가 update(재렌더링) 되었을 때 / 3)컴포넌트가 사라질 때(=unmount) 실행 시킬 수 있다
     // useEffect는 여러 번 쓸 수 있다! 근데, 작성한 순서대로 실행된다.
+
+    let productStock = useContext(stockContext);
+
     useEffect(() => {
 
         // ※setTimeout 기능은 변수에 넣어 사용하는 케이스가 많다. 어떤 곳에서는 이 기능을 쓰고 싶지 않을 수도 있으니깐~
@@ -70,7 +74,11 @@ function Detail(props) {
                     <h4 className="pt-5">{product.title}</h4>
                     <p>{product.content}</p>
                     <p>{product.price}</p>
-                    <button className="btn btn-danger">주문하기</button>
+                    <p>재고 : { productStock[product.id - 1] }</p>
+                    {/* <Info getStock={ props.stock }></Info> */}
+                    <button className="btn btn-danger" onClick={() => {
+                        props.changeStock([9, 10, 11]);
+                    }}>주문하기</button>
                     <button className="btn btn-danger" onClick={() => {
                         // 1. 이전 페이지로 이동 시키기
                         history.goBack();
@@ -82,4 +90,9 @@ function Detail(props) {
     )
 }
 
+// function Info() {
+//     return (
+//         <p>재고 : { productStock }</p>
+//     )
+// }
 export default Detail;
