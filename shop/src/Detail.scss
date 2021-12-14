@@ -32,11 +32,11 @@ $main : #ff0000;
 
 //  # mixin 문법 : @mixin 함수명()
 
-@mixin commonFont(){
-    font-weight: bold;
+@mixin commonFont($weight){
+    font-weight: $weight;
 }
 
 // # mixin 함수 불러오기 : @include 함수명()
 .my-alert3{
-    @include commonFont()
+    @include commonFont(bold); // font-weight:bold;
 }

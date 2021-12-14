@@ -36,11 +36,12 @@ function Detail(props) {
          return () => {
             clearTimeout(timer);
         }
-    }, [modal]);
-   
     // useEffect는 [조건]을 넣을 수 있다. => [modal] state 가 변경이 될 때만 setTimeout 실행하라는 뜻임.
     // [] 이 안에 조건은 여러개 들어갈 수 있다.
     // [] <- 공란이라면? 컴포넌트 마운트 됐을 때 한번 실행하고 그 이후는 실행이 안됨.
+    }, [modal]);
+
+
     return (
         <div className="container">
             <input placeholder='what' onChange={(e) => { changeValue(e.target.value) }}></input>

@@ -1,14 +1,24 @@
 /* eslint-disable */
 import { useState } from 'react';
 import { Container, Nav, NavDropdown, Navbar } from 'react-bootstrap'
+import axios from 'axios';
 import './App.css';
 import shoesData from './data';
 import Detail from './detail'
-
 import { Link, Route, Switch } from 'react-router-dom';
 
 function App() {
   let [shoes, changeShoes] = useState(shoesData);
+  let [status, changeStatus] = useState(false);
+  let [idx, changeIdx] = useState(2);
+  // function fetchData(data) {
+  //   let newArray = [...shoes];
+  //   for (let i = 0; i < data.length; i++){
+  //     newArray.push(data[i]);
+  //   }
+  //   changeShoes(newArray);
+  // }
+
 
   return (
     <div className="App">
@@ -42,7 +52,7 @@ function App() {
       <Switch>
       <Route exact path="/">
         <div>메인</div>
-        <div className="container">
+          <div className="container">
           <div className="row">
             {
               shoes.map((shoe, index) => {
@@ -51,8 +61,27 @@ function App() {
                 )
               })
             }
-          </div>
-        </div>
+            </div>
+            {
+              status == true
+                ? <Load></Load>
+                : null
+            }
+           
+            <button className='btn btn-primary' onClick={() => {
+              changeStatus(true);
+              axios.get(`https://codingapple1.github.io/shop/data${idx}.json`)
+                .then((result) => {
+                  changeStatus(false);
+                  changeShoes([...shoes, ...result.data]);
+                  changeIdx(idx + 1);
+                })
+                .catch((err) => {
+                  console.log(err);
+                })
+            }}>더보기</button>
+      
+        </div> 
       </Route>
       <Route path="/detail/:id">
           <Detail shoes={ shoes }></Detail>
@@ -77,7 +106,11 @@ function Card(props) {
     </div>
   )
 }
-
+function Load() {
+  return (
+    <p>loading...</p>
+  )      
+}
 // # Route
 // 더 정확한 라우트 분리를 위해선 exact 속성을 넣어줘야 한다.
 
