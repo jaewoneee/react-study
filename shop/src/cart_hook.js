@@ -1,8 +1,14 @@
 import React from 'react';
 import { Table } from 'react-bootstrap'
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 function Cart(props) {
+    // state 꺼내 쓰는 방법 2
+    // # useSelector : store 데이터 가져오는 hook
+    let state = useSelector((state)=>state);
+    
+    //  # useDispatch : dispatch 가져와 쓰는 hook
+    let dispatch = useDispatch();
     return (
         <>
             <Table striped bordered hover variant="dark">
@@ -16,22 +22,22 @@ function Cart(props) {
                 </thead>
                 <tbody>
                     {
-                        props.state.map((item, i) => {
+                        state.reducer.map((item, i) => {
                             return (
                                 <tr key={i}>
                                     <td>{item.id}</td>
                                     <td>{item.name}</td>
                                     <td>{item.quan}</td>
                                     <td>
-                                        <button onClick={() => { props.dispatch({ type: 'increment', payload: i }) }}>+</button>
-                                        <button onClick={() => { props.dispatch({ type: 'decrement', payload: i }) }}>-</button>
+                                        <button onClick={() => { dispatch({ type: 'increment', payload: i }) }}>+</button>
+                                        <button onClick={() => { dispatch({ type: 'decrement', payload: i }) }}>-</button>
                                     </td>
                                 </tr>
                             )
                         })
                     }
                     {
-                        props.alert === true
+                        state.alertReducer === true
                             ? <div className="alert-box">
                                 <div className='my-alert'>
                                     <p>지금 구매하시면 할인 20%</p>
@@ -48,12 +54,4 @@ function Cart(props) {
 
 }
 
-// redux store 데이터를 가져와 props로 변환해 주는 함수
-function cartStore(state) { // state는 store에 있던 모든 데이터
-    return {
-        state: state.reducer,
-        alert: state.alertReducer
-    }
-}
-export default connect(cartStore)(Cart);
-// export default Cart;
+export default Cart;

@@ -5,6 +5,7 @@ import { Nav } from 'react-bootstrap'
 import { CSSTransition } from 'react-transition-group'
 import { stockContext } from './App.js';
 import './Detail.scss';
+import { connect } from 'react-redux';
 
 // # Lifecycle Hook
 //  1. 옛날 버전
@@ -26,10 +27,13 @@ function Detail(props) {
     let [tab, changeTab] = useState(0);
     let [transition, changeTransition] = useState(false);
     let [modal, changeModal] = useState(true);
+    let [quantity, changeQuantity] = useState(0);
     let [value, changeValue] = useState('');
     let productStock = useContext(stockContext);
+
     //  2. 요즘 버전 : useEffect
     //  1)컴포넌트가 mount 되었을때 / 2)컴포넌트가 update(재렌더링) 되었을 때 / 3)컴포넌트가 사라질 때(=unmount) 실행 시킬 수 있다
+    // *** [] 대괄호안에 state를 집어넣으면 state가 변경되면 이 코드 실행해주세요~ 라는 뜻으로도 사용가능
     // useEffect는 여러 번 쓸 수 있다! 근데, 작성한 순서대로 실행된다.
     useEffect(() => {
 
@@ -70,16 +74,19 @@ function Detail(props) {
 
             <div className="row">
                 <div className="col-md-6">
-                    <img src="https://codingapple1.github.io/shop/shoes1.jpg" width="100%" />
+                    <img src={`https://codingapple1.github.io/shop/shoes${product.id}.jpg`} width="100%" alt="thumb"/>
                 </div>
                 <div className="col-md-6 mt-4">
                     <h4 className="pt-5">{product.title}</h4>
                     <p>{product.content}</p>
                     <p>{product.price}</p>
+                    <input placeholder='구매수량' onChange={(e)=>{changeQuantity(e.target.value)}}></input>
                     <p>재고 : {productStock[product.id - 1]}</p>
                     {/* <Info getStock={ props.stock }></Info> */}
                     <button className="btn btn-danger" onClick={() => {
                         props.changeStock([9, 10, 11]);
+                        props.dispatch({ type: 'addItem', payload: { id:product.id, name:product.title, quan: quantity } });
+                        history.push('/cart');
                     }}>주문하기</button>
                     <button className="btn btn-danger" onClick={() => {
                         // 1. 이전 페이지로 이동 시키기
@@ -118,9 +125,11 @@ function TabContent(props) {
         return <div>2번째</div>
     }
 }
-// function Info() {
-//     return (
-//         <p>재고 : { productStock }</p>
-//     )
-// }
-export default Detail;
+
+// redux store 데이터를 가져와 props로 변환해 주는 함수
+function fetchStore(state) { // state는 store에 있던 모든 데이터
+    return {
+        state: state.reducer
+    }
+}
+export default connect(fetchStore)(Detail);

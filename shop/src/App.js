@@ -1,12 +1,13 @@
 /* eslint-disable */
 import React, { useState, useContext} from 'react';
 import { Container, Nav, NavDropdown, Navbar } from 'react-bootstrap'
-import { Link, Route, Switch } from 'react-router-dom';
+import { Link, Route, Switch, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import './App.css';
 import shoesData from './data';
 import Detail from './detail'
 import Cart from './cart'
+import Play from './play'
 // # context
 // 1. React.createContext로 범위 생성 => 변수에 담음!
 // 2. 같은 값을 공유할 HTML을 변수명의 태그로 감싼다. ex) <stockContext.Provider>
@@ -85,7 +86,8 @@ function App() {
         </div> 
       </Route>
         <Route path="/detail/:id">
-           <stockContext.Provider value={stock}>
+          <stockContext.Provider value={stock}>
+            {/* props 데이터 보내는 것임 : shoes={shoes} */}
             <Detail shoes={shoes} changeStock={changeStock}></Detail>
           </stockContext.Provider>
       </Route>
@@ -93,10 +95,13 @@ function App() {
        <Route path="/cart">
             <Cart></Cart>
         </Route>  
+        <Route path="/play">
+            <Play></Play>
+        </Route>   
       <Route path="/:id">
             <div>whatever</div>
         </Route>   
-      
+       
     </Switch>
     </div>
   );
@@ -104,8 +109,9 @@ function App() {
 
 // component화
 function Card(props) {
+  let history = useHistory();
   return (
-    <div className="col-md-4">
+    <div className="col-md-4" onClick={()=>{history.push(`/detail/${props.getShoes.id}`)}}>
       <img src={`https://codingapple1.github.io/shop/shoes${props.getShoes.id}.jpg`} width="100%" alt="thumbnail" />
       <h4>{props.getShoes.title}</h4>
       <small>{props.getShoes.content}</small>
