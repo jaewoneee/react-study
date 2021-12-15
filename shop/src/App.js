@@ -1,11 +1,13 @@
 /* eslint-disable */
-import React, { useState, useContext} from 'react';
+import React, { useState, useContext, lazy, Suspense} from 'react';
 import { Container, Nav, NavDropdown, Navbar } from 'react-bootstrap'
 import { Link, Route, Switch, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import './App.css';
 import shoesData from './data';
-import Detail from './detail'
+// import Detail from './detail'
+// lazy 쓴 이유 : detail컴포넌트(detail.js) 가 필요할 때에만 불러오기 위해 
+let Detail = lazy(() => { return import('./detail.js') });
 import Cart from './cart'
 import Play from './play'
 // # context
@@ -87,8 +89,11 @@ function App() {
       </Route>
         <Route path="/detail/:id">
           <stockContext.Provider value={stock}>
+            {/* lazy 쓰면 Suspense 같이 써줘야함 . fallback은 로딩 중에 보여줄 엘리먼트*/}
+            <Suspense fallback={ <div>Loading...</div>}>
             {/* props 데이터 보내는 것임 : shoes={shoes} */}
             <Detail shoes={shoes} changeStock={changeStock}></Detail>
+            </Suspense>
           </stockContext.Provider>
       </Route>
         {/* <Route path="" component={ aaa }></Route> */}
