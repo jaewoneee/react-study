@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState, useContext, lazy, Suspense} from 'react';
+import React, { useState, useContext, lazy, Suspense, useEffect} from 'react';
 import { Container, Nav, NavDropdown, Navbar } from 'react-bootstrap'
 import { Link, Route, Switch, useHistory } from 'react-router-dom';
 import axios from 'axios';
@@ -21,6 +21,9 @@ function App() {
   let [stock, changeStock] = useState([1,2,3])
   let [status, changeStatus] = useState(false);
   let [idx, changeIdx] = useState(2);
+
+
+  
 
   return (
     <div className="App">

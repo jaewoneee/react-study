@@ -31,6 +31,35 @@ function Detail(props) {
     let [value, changeValue] = useState('');
     let productStock = useContext(stockContext);
 
+    // localStorage 저장하기
+    // *** 내 코드
+    // useEffect(() => {
+    //     let storage = localStorage.getItem('watched');
+      
+    //     if (storage !== null) {
+    //         storage = JSON.parse(storage);
+    //     } else {
+    //         storage = []
+    //     }
+    //     storage.push(id);
+    //     storage = Array.from(new Set(storage));    // new Set() : 중복 데이터 제거
+    //     localStorage.setItem('watched', JSON.stringify(storage));
+    // }, []);
+
+    // *** 선생님 코드
+    useEffect(() => {
+        var arr = localStorage.getItem('watched');
+        if (arr == null) {
+            arr = []
+        } else {
+            arr = JSON.parse(arr);
+        }
+        arr.push(id);
+        arr = new Set(arr);
+        arr = [...arr];
+        localStorage.setItem('watched', JSON.stringify(arr));
+    })
+
     //  2. 요즘 버전 : useEffect
     //  1)컴포넌트가 mount 되었을때 / 2)컴포넌트가 update(재렌더링) 되었을 때 / 3)컴포넌트가 사라질 때(=unmount) 실행 시킬 수 있다
     // *** [] 대괄호안에 state를 집어넣으면 state가 변경되면 이 코드 실행해주세요~ 라는 뜻으로도 사용가능
@@ -74,18 +103,18 @@ function Detail(props) {
 
             <div className="row">
                 <div className="col-md-6">
-                    <img src={`https://codingapple1.github.io/shop/shoes${product.id}.jpg`} width="100%" alt="thumb"/>
+                    <img src={`https://codingapple1.github.io/shop/shoes${product.id}.jpg`} width="100%" alt="thumb" />
                 </div>
                 <div className="col-md-6 mt-4">
                     <h4 className="pt-5">{product.title}</h4>
                     <p>{product.content}</p>
                     <p>{product.price}</p>
-                    <input placeholder='구매수량' onChange={(e)=>{changeQuantity(e.target.value)}}></input>
+                    <input placeholder='구매수량' onChange={(e) => { changeQuantity(e.target.value) }}></input>
                     <p>재고 : {productStock[product.id - 1]}</p>
                     {/* <Info getStock={ props.stock }></Info> */}
                     <button className="btn btn-danger" onClick={() => {
                         props.changeStock([9, 10, 11]);
-                        props.dispatch({ type: 'addItem', payload: { id:product.id, name:product.title, quan: quantity } });
+                        props.dispatch({ type: 'addItem', payload: { id: product.id, name: product.title, quan: quantity } });
                         history.push('/cart');
                     }}>주문하기</button>
                     <button className="btn btn-danger" onClick={() => {
@@ -107,8 +136,8 @@ function Detail(props) {
                     <Nav.Link eventKey="link-2" onClick={() => { changeTab(2); changeTransition(false); }}>3</Nav.Link>
                 </Nav.Item>
             </Nav>
-            <CSSTransition in={ transition } classNames="wow" timeout={500}>
-                <TabContent currentTab={ tab } tabAni={changeTransition}></TabContent>
+            <CSSTransition in={transition} classNames="wow" timeout={500}>
+                <TabContent currentTab={tab} tabAni={changeTransition}></TabContent>
             </CSSTransition>
         </div>
     )
