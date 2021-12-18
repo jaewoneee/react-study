@@ -1,0 +1,53 @@
+// # 변수 설정
+$main : #ff0000;
+
+.red{
+    color: $main;
+}
+
+// # nesting 문법
+// .container{
+//     h4{font-weight:bold}
+//     p{
+//         color: blue;
+//     }
+// }
+
+.my-alert{
+    background-color: #eeeeee;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+    p{
+        margin-bottom: 0;
+    }
+}
+// # extend 문법 : @extend 선택자명
+.my-alert2{
+    @extend .my-alert;
+    background-color:#c9adad;
+}
+
+//  # mixin 문법 : @mixin 함수명()
+
+@mixin commonFont($weight){
+    font-weight: $weight;
+}
+
+// # mixin 함수 불러오기 : @include 함수명()
+.my-alert3{
+    @include commonFont(bold); // font-weight:bold;
+}
+
+// CSS Transition
+// 에니메이션 시작할 때 적용할 css
+.wow-enter{
+    opacity: 0;
+}
+// 에니메이션 동작할 때 적용할 css
+.wow-enter-active{
+    opacity: 1;
+    transition: all 5000ms;
+}
